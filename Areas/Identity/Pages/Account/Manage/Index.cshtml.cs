@@ -52,10 +52,20 @@ namespace UserManagmentWithIdentity.Areas.Identity.Pages.Account.Manage
         /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
+
+            [Required]
+            [Display(Name = "User Name")]
+            public string UserName { get; set; }
+
+            [Required]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Display(Name = "Profle Picture")]
+            public byte[] ProflePicture { get; set; }
+            [Required]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
@@ -63,14 +73,19 @@ namespace UserManagmentWithIdentity.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(ApplicationUser user)
         {
-            var userName = await _userManager.GetUserNameAsync(user);
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
-            Username = userName;
+            //var userName = await _userManager.GetUserNameAsync(user);
+            //var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+
+            // Username = user.UserName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                PhoneNumber = user.PhoneNumber,
+                ProflePicture = user.ProfilePicture
             };
         }
 
@@ -101,6 +116,7 @@ namespace UserManagmentWithIdentity.Areas.Identity.Pages.Account.Manage
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+
             if (Input.PhoneNumber != phoneNumber)
             {
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
@@ -110,7 +126,33 @@ namespace UserManagmentWithIdentity.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
+            var x = _userManager.SetUserNameAsync(user, Input.UserName).Result.Succeeded;
+            if (x)
+            {
+                user.FirstName = !string.IsNullOrEmpty(Input.FirstName) ? Input.FirstName : user.FirstName;
+                user.LastName = !string.IsNullOrEmpty(Input.LastName) ? Input.LastName : user.LastName;
+                user.UserName = !string.IsNullOrEmpty(Input.UserName) ? Input.UserName : user.UserName;
+            }
 
+            //upload profile picture
+            if (Request.Form.Files.Count > 0)
+            {
+                var file = Request.Form.Files.FirstOrDefault();
+                //check size and extiention
+
+                using (var dataStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(dataStream);
+                    user.ProfilePicture = dataStream.ToArray();
+                }
+            }
+
+            var res = await _userManager.UpdateAsync(user);
+            if (!res.Succeeded)
+            {
+                StatusMessage = "Unexpected error when trying to Update";
+                return RedirectToPage();
+            }
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();

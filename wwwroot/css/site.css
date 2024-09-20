@@ -20,3 +20,17 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/*Custom css*/
+
+.Image-Profile {
+    width: 272px;
+    height: 272px;
+    object-fit: cover;
+    border-radius:8px;
+}
+.avatar{
+    height:35px;
+    width:35px;
+    object-fit:cover;
+}

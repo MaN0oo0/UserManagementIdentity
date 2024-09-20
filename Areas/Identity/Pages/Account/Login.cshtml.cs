@@ -64,10 +64,9 @@ namespace UserManagmentWithIdentity.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
+
+
+
             [Required]
             [Display(Name = "Email Or UserName")]
             public string Email { get; set; }
@@ -112,7 +111,7 @@ namespace UserManagmentWithIdentity.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
 
-            var UserName = new EmailAddressAttribute().IsValid(Input.Email) ? _UserManager.FindByEmailAsync(Input.Email).Result.UserName : Input.Email;
+            var UserName = new EmailAddressAttribute().IsValid(Input.Email) ? new MailAddress(Input.Email).User : Input.Email;
             if (ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout
@@ -120,10 +119,6 @@ namespace UserManagmentWithIdentity.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-
-
-
-
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
