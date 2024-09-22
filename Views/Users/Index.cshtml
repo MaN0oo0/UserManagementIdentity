@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+@model IEnumerable<UserViewModel>
+
+<table class="table table-striped mt-4">
+    <thead>
+        <tr class="bg-primary text-white">
+            <td>FirstName</td>
+            <td>LastName</td>
+            <td>UserName</td>
+            <td>Email</td>
+            <td>Roles</td>
+            <td>Actions</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>
+                    @if (user.Roles != null && user.Roles.Any())
+                    {
+
+                        <b>    @(string.Join(" , ",user.Roles.ToList()))</b>
+
+
+                    }
+                  
+                </td>
+
+                <td>
+                    <a class="btn btn-primary" asp-route-UserId="@user.Id" asp-action="ManageRole">Manage</a>
+                    @*<a class="btn btn-danger" asp-route-UserId="@user.Id" asp-action="ManageRole">Delete</a>*@
+
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

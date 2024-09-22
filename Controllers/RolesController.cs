@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using UserManagmentWithIdentity.ViewModels;
 
 namespace UserManagmentWithIdentity.Controllers
 {
-    [Authorize(Roles.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     public class RolesController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -17,8 +19,29 @@ namespace UserManagmentWithIdentity.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var Roles = _roleManager.Roles.ToListAsync();
-            return View(Roles);
+            var Roles = await _roleManager.Roles.ToListAsync();
+            var ss = new SelectList(Roles, "Id", "Name");
+            ViewBag.SelectList = ss;
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Add(RoleFormViewModel Model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(nameof(Index), await _roleManager.Roles.ToListAsync());
+            }
+
+            var roleExists = await _roleManager.RoleExistsAsync(Model.Name);
+            if (roleExists)
+            {
+                ModelState.AddModelError("Name", "Role Is Exist !");
+                return View(nameof(Index),await _roleManager.Roles.ToListAsync());
+            }
+            await _roleManager.CreateAsync(new IdentityRole { Name = Model.Name.Trim() });
+            return View(nameof(Index), await _roleManager.Roles.ToListAsync());
+
         }
     }
 }
