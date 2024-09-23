@@ -26,7 +26,7 @@ namespace UserManagmentWithIdentity.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add(RoleFormViewModel Model)
+        public async Task<IActionResult> Index(RoleFormViewModel Model)
         {
             if (!ModelState.IsValid)
             {
@@ -40,6 +40,7 @@ namespace UserManagmentWithIdentity.Controllers
                 return View(nameof(Index),await _roleManager.Roles.ToListAsync());
             }
             await _roleManager.CreateAsync(new IdentityRole { Name = Model.Name.Trim() });
+            ModelState.Clear();
             return View(nameof(Index), await _roleManager.Roles.ToListAsync());
 
         }

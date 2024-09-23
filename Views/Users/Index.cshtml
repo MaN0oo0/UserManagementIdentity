@@ -25,16 +25,14 @@
                 <td>
                     @if (user.Roles != null && user.Roles.Any())
                     {
-
-                        <b>    @(string.Join(" , ",user.Roles.ToList()))</b>
-
-
+                        <b>@(string.Join(" , ",user.Roles.ToList()))</b>
+                    
                     }
                   
                 </td>
 
                 <td>
-                    <a class="btn btn-primary" asp-route-UserId="@user.Id" asp-action="ManageRole">Manage</a>
+                    <a class="btn btn-primary" asp-controller="Users" asp-route-UserId="@user.Id" asp-action="ManageRole">Manage</a>
                     @*<a class="btn btn-danger" asp-route-UserId="@user.Id" asp-action="ManageRole">Delete</a>*@
 
                 </td>

@@ -11,41 +11,43 @@
 
     <partial name="_RoleForm" model="new RoleFormViewModel()" />
 
-
-    <table class="table table-striped mt-4">
-        <thead>
-            <tr class="bg-primary text-white">
-                <td>Id</td>
-                <td>Role Name</td>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                if (ViewBag.SelectList != null)
-                {
-
-
-                    foreach (var item in (IEnumerable<SelectListItem>)ViewBag.SelectList)
+    <div class="overflow-auto" style="max-height:300px !important">
+        <table class="table table-striped mt-4 overflow-scroll">
+            <thead>
+                <tr class="bg-primary text-white">
+                    <td>Id</td>
+                    <td>Role Name</td>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    if (ViewBag.SelectList != null)
                     {
-                        <tr>
-                            <td>@item.Value</td>
-                            <td>@item.Text</td>
-                        </tr>
+
+
+                        foreach (var item in (IEnumerable<SelectListItem>)ViewBag.SelectList)
+                        {
+                            <tr>
+                                <td>@item.Value</td>
+                                <td>@item.Text</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        foreach (var role in Model)
+                        {
+                            <tr>
+                                <td>@role.Id</td>
+                                <td>@role.Name</td>
+                            </tr>
+                        }
                     }
                 }
-                else
-                {
-                    foreach (var role in Model)
-                    {
-                        <tr>
-                            <td>@role.Id</td>
-                            <td>@role.Name</td>
-                        </tr>
-                    }
-                }
-            }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+
+    </div>
 
     @*<div class="row">
             <div class="col-md-8">
@@ -64,4 +66,14 @@
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial.cshtml">
+        @*<script>
+            $(function () {
+
+                $("form").on("submit", () => {
+                    $("#Name").val("");
+                })
+            })
+
+        </script>*@
+
 }

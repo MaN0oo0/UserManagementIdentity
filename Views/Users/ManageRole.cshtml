@@ -1,0 +1,43 @@
+﻿@model UserRoleViewModel
+@{
+    ViewData["Title"] = "ManageRole";
+}
+
+
+
+<form method="post">
+
+
+    <div class="card">
+        <div class=" card-header text-center">
+            <h4>Manage Roles</h4>
+            <span> <mark style=" padding: 5px; border-radius: 7px; background-color: #bfe7e7;">@Model.UserName</mark></span>
+            <input type="hidden" asp-for="@Model.UserId" />
+            <input type="hidden" asp-for="@Model.UserName" />
+        </div>
+        <div class=" card-body">
+            @for (int i = 0; i < Model.Roles.Count; i++)
+            
+            {
+                <div class="form-check">
+                    <input type="hidden" asp-for="@Model.Roles[i].RoleName" />
+                    <input type="hidden" asp-for="@Model.Roles[i].RoleId" />
+                    <input class="form-check-input" asp-for="@Model.Roles[i].IsSelected" id="flexCheckDefault_@Model.Roles[i].RoleName">
+                    <label class="form-check-label" for="flexCheckDefault_@Model.Roles[i].RoleName">
+                        @Model.Roles[i].RoleName
+                    </label>
+
+                </div>
+            }
+            <div asp-validation-summary="All" class="text-danger"></div>
+        </div>
+
+
+        <div class="card-footer mt-3">
+            <input type="submit" value="Update" class="btn btn-primary" />
+            <a asp-action="Index" class="btn btn-danger">Cancel</a>
+        </div>
+    </div>
+   
+
+</form>
