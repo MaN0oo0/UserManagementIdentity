@@ -39,7 +39,7 @@ namespace UserManagmentWithIdentity.Controllers
                 ModelState.AddModelError("Name", "Role Is Exist !");
                 return View(nameof(Index),await _roleManager.Roles.ToListAsync());
             }
-            await _roleManager.CreateAsync(new IdentityRole { Name = Model.Name.Trim() });
+            await _roleManager.CreateAsync(new IdentityRole { Name = Model.Name.Trim(),ConcurrencyStamp=Guid.NewGuid().ToString() });
             ModelState.Clear();
             return View(nameof(Index), await _roleManager.Roles.ToListAsync());
 

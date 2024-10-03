@@ -5,23 +5,24 @@
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-        <li class="nav-item">
+        @*<li class="nav-item">
+           
+        </li>*@
+        <li class="nav-item d-flex justify-content-center flex-row gap-2">
             @{
                 var ProfilePic = UserManager.GetUserAsync(User).Result?.ProfilePicture;
                 if (ProfilePic is not null)
                 {
 
-                    <a class="nav-link text-dark">  <img class="rounded-circle avatar"  src="data:image/*;base64,@(Convert.ToBase64String(ProfilePic))" /></a>
+                    <a class="nav-link text-dark">  <img class="rounded-circle avatar" src="data:image/*;base64,@(Convert.ToBase64String(ProfilePic))" /></a>
                 }
                 else
                 {
                     <a class="nav-link text-dark">
-                        <img class="rounded-circle avatar"  src="~/imgs/1.jpg" />
+                        <img class="rounded-circle avatar" src="~/imgs/1.jpg" />
                     </a>
                 }
             }
-        </li>
-        <li class="nav-item">
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
                 Hello
                 @User.Identity?.Name
